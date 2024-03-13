@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         height: 40,
         alignItems: "center",
-        borderRadius: 10
+        borderRadius: 10,
+        marginTop: 20
     },
     textSearchBar: {
         color: "#858585",
