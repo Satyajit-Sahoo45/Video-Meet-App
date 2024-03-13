@@ -9,7 +9,6 @@ const Home = () => {
     return (
         <View style={styles.container}>
             <SafeAreaView style={{ height: '100%' }}>
-                <Text>Home</Text>
                 {/* Header */}
                 <Header />
 
