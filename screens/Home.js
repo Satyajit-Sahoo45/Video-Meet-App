@@ -5,7 +5,7 @@ import SearchBar from '../components/SearchBar'
 import MenuButtons from '../components/MenuButtons'
 import ContactsMenu from '../components/ContactsMenu'
 
-const Home = () => {
+const Home = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <SafeAreaView style={{ height: '100%' }}>
@@ -16,7 +16,7 @@ const Home = () => {
                 <SearchBar />
 
                 {/* Menu buttons*/}
-                <MenuButtons />
+                <MenuButtons navigation={navigation} />
 
                 {/* contacts menu */}
                 <ContactsMenu />
