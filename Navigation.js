@@ -10,8 +10,20 @@ const Navigation = () => {
     return (
         <NavigationContainer>
             <stack.Navigator initialRouteName={Home}>
-                <stack.Screen name='Home' component={Home} />
-                <stack.Screen name='Room' component={MeetingRoom} />
+                <stack.Screen name='Home' component={Home} options={
+                    {
+                        headerShown: false,
+                    }
+                } />
+                <stack.Screen name='Room' component={MeetingRoom} options={
+                    {
+                        title: "Start a Meeting",
+                        headerStyle: {
+                            backgroundColor: "#1c1c1c",
+                        },
+                        headerTintColor: "white"
+                    }
+                } />
             </stack.Navigator>
         </NavigationContainer>
     )

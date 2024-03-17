@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         paddingVertical: 10,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        marginTop: 40
     },
     heading: {
         color: "#efefef",
