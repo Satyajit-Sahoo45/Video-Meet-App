@@ -4,20 +4,30 @@ import StartMeeting from '../components/StartMeeting';
 import { initSocket } from '../socket';
 import { io } from "socket.io-client";
 
-const socket = io('https://13a2-2401-4900-313a-3533-892f-7df8-b0b-e08a.ngrok-free.app');
+let socket;
 
 const MeetingRoom = () => {
     const [name, setName] = useState();
     const [roomId, setRoomId] = useState();
+    const [activeUsers, setActiveUsers] = useState();
+
+    const joinRoom = () => {
+        socket.emit('join-room', { roomId: roomId, userName: name })
+    }
 
     useEffect(() => {
-        console.log("calling meeting room useEffect")
-        console.log(socket, ";;;")
-        socket.connect("connect", (socketId) => {
-            console.log(socketId, ":::")
+        socket = io("https://13a2-2401-4900-313a-3533-892f-7df8-b0b-e08a.ngrok-free.app")
+        socket.on('connection', () => {
+            console.log("connected")
         })
-        console.log("after socket")
+
+        socket.on('all-users', users => {
+            console.log("Active users");
+            console.log(users)
+            setActiveUsers(users);
+        })
     }, [])
+
 
 
 
@@ -28,6 +38,7 @@ const MeetingRoom = () => {
                 setName={setName}
                 roomId={roomId}
                 setRoomId={setRoomId}
+                joinRoom={joinRoom}
             />
         </View>
     )
