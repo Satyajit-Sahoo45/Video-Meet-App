@@ -4,7 +4,7 @@ import StartMeeting from '../components/StartMeeting';
 import { initSocket } from '../socket';
 import { io } from "socket.io-client";
 
-const socket = io('http://localhost:3001');
+const socket = io('https://13a2-2401-4900-313a-3533-892f-7df8-b0b-e08a.ngrok-free.app');
 
 const MeetingRoom = () => {
     const [name, setName] = useState();
@@ -13,7 +13,7 @@ const MeetingRoom = () => {
     useEffect(() => {
         console.log("calling meeting room useEffect")
         console.log(socket, ";;;")
-        socket.on("connection", (socketId) => {
+        socket.connect("connect", (socketId) => {
             console.log(socketId, ":::")
         })
         console.log("after socket")

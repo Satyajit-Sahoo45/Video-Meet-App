@@ -1,17 +1,22 @@
 const express = require('express');
 const { Server } = require('socket.io');
-const http = require('http');
+const { createServer } = require('http');
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+    },
+});
 
 
 app.get('/', (req, res) => {
     res.send("Welcome")
 })
 
-io.on("connection", (socket) => {
+io.on("connect", (socket) => {
     console.log("Someone connected", socket.id)
     // socket.on("join-room", ({ roomId, userName }) => {
     //     console.log("User Joined room")
@@ -20,6 +25,6 @@ io.on("connection", (socket) => {
 })
 
 const port = 3001
-server.listen(port, () => {
+httpServer.listen(port, () => {
     console.log(`Backend started on port localhost:${port}`)
 })
