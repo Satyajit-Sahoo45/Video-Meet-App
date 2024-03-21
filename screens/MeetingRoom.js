@@ -1,11 +1,36 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, TextInput, SafeAreaView, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useMemo, useState } from 'react'
 import StartMeeting from '../components/StartMeeting';
 import { initSocket } from '../socket';
 import { io } from "socket.io-client";
 import { Camera } from 'expo-camera';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 let socket;
+
+const items = [
+    {
+        id: 1,
+        name: "microphone",
+        title: "Mute",
+        customColor: "#efefef"
+    },
+    {
+        id: 2,
+        name: "video-camera",
+        title: "Stop Video",
+    },
+    {
+        id: 3,
+        name: "upload",
+        title: "Share Screen",
+    },
+    {
+        id: 4,
+        name: "group",
+        title: "Participants",
+    },
+]
 
 const MeetingRoom = () => {
     const [name, setName] = useState();
@@ -28,7 +53,7 @@ const MeetingRoom = () => {
     }
 
     useEffect(() => {
-        socket = io("https://dd4b-2401-4900-74dd-f45f-d0fd-a6ff-91c4-1c19.ngrok-free.app")
+        socket = io("https://70e1-106-222-187-101.ngrok-free.app")
         socket.on('connection', () => {
             console.log("connected")
         })
@@ -46,12 +71,31 @@ const MeetingRoom = () => {
     return (
         <View style={styles.container}>
             {startCamera ? (
-                <Camera
-                    type={"front"}
-                    style={{ width: "100%", height: 600 }}
-                >
+                <SafeAreaView style={{ flex: 1 }}>
+                    <View style={styles.cameraContainer}>
+                        <Camera
+                            type={"front"}
+                            style={{ width: "100%", height: 600 }}
+                        >
+                        </Camera>
+                    </View>
+                    <View style={styles.menu}>
+                        {
+                            items.map((item, index) => {
+                                return (
+                                    <TouchableOpacity
+                                        style={styles.tile}
+                                        key={index}
+                                    >
+                                        <FontAwesome name={item.name} size={24} color={"#efefef"} />
+                                        <Text style={styles.textTile}>{item.title}</Text>
+                                    </TouchableOpacity>
 
-                </Camera>
+                                )
+                            })
+                        }
+                    </View>
+                </SafeAreaView>
             ) : (
                 <StartMeeting
                     name={name}
@@ -60,8 +104,9 @@ const MeetingRoom = () => {
                     setRoomId={setRoomId}
                     joinRoom={joinRoom}
                 />
-            )}
-        </View>
+            )
+            }
+        </View >
     )
 }
 
@@ -71,5 +116,25 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#1c1c1c",
         flex: 1
+    },
+    tile: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: 50,
+        marginTop: 15
+    },
+    textTile: {
+        color: "white",
+        marginTop: 10,
+    },
+    menu: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginBottom: 20
+    },
+    cameraContainer: {
+        flex: 1,
+        backgroundColor: "black",
+        justifyContent: "center",
     }
 })
