@@ -11,7 +11,7 @@ const io = new Server(httpServer, {
     },
 });
 
-const users = [];
+let users = [];
 
 
 app.get('/', (req, res) => {
