@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View, TextInput, SafeAreaView, TouchableOpacity, Alert } from 'react-native'
+import { Modal, StyleSheet, Text, View, TextInput, SafeAreaView, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useMemo, useState } from 'react'
 import StartMeeting from '../components/StartMeeting';
 import { initSocket } from '../socket';
 import { io } from "socket.io-client";
 import { Camera } from 'expo-camera';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import Chat from '../components/Chat';
 
 let socket;
 
@@ -35,8 +36,9 @@ const items = [
 const MeetingRoom = () => {
     const [name, setName] = useState();
     const [roomId, setRoomId] = useState();
-    const [activeUsers, setActiveUsers] = useState(["Satyajit", "John"]);
+    const [activeUsers, setActiveUsers] = useState();
     const [startCamera, setStartCamera] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
     const startCameraHandler = async () => {
         const { status } = await Camera.requestCameraPermissionsAsync();
@@ -53,16 +55,16 @@ const MeetingRoom = () => {
     }
 
     useEffect(() => {
-        socket = io("https://70e1-106-222-187-101.ngrok-free.app")
+        socket = io("https://8682-2401-4900-7019-be04-69-6632-4468-8abe.ngrok-free.app")
         socket.on('connection', () => {
             console.log("connected")
         })
 
-        socket.on('all-users', users => {
-            console.log("Active users");
-            console.log(users)
-            setActiveUsers(users);
-        })
+        // socket.on('all-users', users => {
+        //     console.log("Active users");
+        //     console.log(users)
+        //     setActiveUsers(users);
+        // })
     }, [])
 
 
@@ -72,18 +74,34 @@ const MeetingRoom = () => {
         <View style={styles.container}>
             {startCamera ? (
                 <SafeAreaView style={{ flex: 1 }}>
+
+                    <Modal
+                        animationType='slide'
+                        presentationStyle='fullScreen'
+                        visible={modalVisible}
+                        onRequestClose={() => {
+                            setModalVisible(!modalVisible)
+                        }}
+                    >
+                        <Chat
+                            modalVisible={modalVisible}
+                            setModalVisible={setModalVisible}
+                        />
+                    </Modal>
+
+                    {/* Active users */}
                     <View style={styles.activeUsersContainer}>
                         <View style={styles.cameraContainer}>
                             <Camera
                                 type={"front"}
                                 style={{
-                                    width: activeUsers.length <= 1 ? "100%" : 200,
-                                    height: activeUsers.length <= 1 ? 600 : 200
+                                    width: activeUsers?.length <= 1 ? "100%" : 200,
+                                    height: activeUsers?.length <= 1 ? 600 : 200
                                 }}
                             >
                             </Camera>
                             {
-                                activeUsers.filter(user => (user.userName !== name)).map((user, index) => {
+                                activeUsers?.filter(user => (user.userName !== name)).map((user, index) => {
                                     <View style={styles.activeUserContainer} key={index}>
                                         <Text style={{ color: "white" }}>{user.userName}</Text>
                                     </View>
@@ -105,6 +123,15 @@ const MeetingRoom = () => {
                                 )
                             })
                         }
+                        <TouchableOpacity
+                            style={styles.tile}
+                            onPress={(() => {
+                                setModalVisible(!modalVisible)
+                            })}
+                        >
+                            <FontAwesome name={"comment"} size={24} color={"#efefef"} />
+                            <Text style={styles.textTile}>Chat</Text>
+                        </TouchableOpacity>
                     </View>
                 </SafeAreaView>
             ) : (
